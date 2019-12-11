@@ -104,16 +104,14 @@ class MusicPlayManager: ObservableObject {
         
         self.engine.connect(self.playerNode, to: self.eqNode, format: audioFile.processingFormat)
         self.engine.connect(self.eqNode, to: self.engine.mainMixerNode, format: audioFile.processingFormat)
-        try self.engine.start()
+        
         self.playerNode.scheduleFile(audioFile, at: nil, completionHandler: nil)
         self.playStatus = .prepared
     }
     
     func play() throws {
-        guard self.engine.isRunning else {
-            return
-        }
         try AVAudioSession.sharedInstance().setActive(true, options: [])
+        try self.engine.start()
         self.playerNode.play()
         self.playStatus = .playing
     }
